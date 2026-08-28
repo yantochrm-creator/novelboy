@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aeterna Nocturne - Platform Novel Horor Romantis Kompleks</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        crimson: {
+                            DEFAULT: '#990000',
+                            hover: '#cc0000',
+                            dark: '#4a0000',
+                        },
+                        darkbg: '#0a0a0c',
+                        cardbg: '#121216',
+                        readbg: '#0f0f12'
+                    },
+                    fontFamily: {
+                        serif: ['Georgia', 'Cambria', 'serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #0a0a0c; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #4a0000; border-radius: 3px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #990000; }
+        .glow-effect { box-shadow: 0 0 15px rgba(153, 0, 0, 0.4); }
+    </style>
+</head>
+<body class="bg-darkbg text-gray-300 font-sans min-h-screen flex flex-col justify-between custom-scrollbar selection:bg-crimson selection:text-white">
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-50 bg-darkbg/90 backdrop-blur-md border-b border-crimson-dark/40 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="showCatalog()">
+            <i class="fa-solid font-bold text-crimson text-2xl fa-skull"></i>
+            <span class="text-xl font-bold tracking-wider text-white uppercase font-serif">Aeterna<span class="text-crimson">Nocturne</span></span>
+        </div>
+        <button onclick="showCatalog()" class="bg-gray-800 hover:bg-crimson text-white px-4 py-2 rounded-md text-sm font-semibold transition-all duration-300">
+            <i class="fa-solid fa-list mr-2"></i>Katalog 10 Novel
+        </button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-grow">
+        
+        <!-- View 1: Katalog 10 Novel -->
+        <section id="catalog-view" class="py-12 px-6 max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="text-crimson text-sm font-semibold tracking-widest uppercase px-3 py-1 bg-crimson-dark/30 border border-crimson-dark rounded-full">Koleksi Spesial & Narasi Kompleks</span>
+                <h1 class="text-3xl md:text-5xl font-bold text-white mt-4 font-serif">10 Kisah Cinta, Duka, & Teror Kelam</h1>
+                <p class="text-gray-400 mt-2">Pilih novel untuk membaca narasi mendalam yang dipisahkan bagian demi bagian.</p>
+            </div>
+
+            <!-- Grid 10 Novel -->
+            <div id="novel-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Diisi via JavaScript -->
+            </div>
+        </section>
+
+        <!-- View 2: Reading Interface (Mode Baca per Bagian) -->
+        <section id="reader-view" class="hidden py-8 px-4 md:px-6 bg-readbg min-h-screen">
+            <div class="max-w-3xl mx-auto">
+                
+                <!-- Navigasi Kembali -->
+                <button onclick="showCatalog()" class="mb-6 text-sm text-gray-400 hover:text-crimson transition-colors flex items-center">
+                    <i class="fa-solid fa-arrow-left mr-2"></i> Kembali ke Katalog Novel
+                </button>
+
+                <!-- Header Informasi Novel & Bab -->
+                <div class="bg-cardbg border border-gray-800 rounded-xl p-6 mb-6 shadow-xl">
+                    <span id="reader-genre" class="text-xs font-bold text-crimson uppercase tracking-wider"></span>
+                    <h2 id="reader-novel-title" class="text-2xl md:text-3xl font-bold text-white font-serif mt-1"></h2>
+                    <div class="flex flex-wrap justify-between items-center mt-4 pt-4 border-t border-gray-800">
+                        <span id="reader-chapter-title" class="text-lg font-semibold text-gray-200"></span>
+                        <!-- Selector Bab -->
+                        <select id="chapter-select" onchange="onChapterSelect(this.value)" class="bg-gray-900 text-gray-200 border border-gray-700 rounded px-3 py-1 text-sm font-sans focus:outline-none focus:border-crimson">
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Control Panel Mode Baca -->
+                <div class="bg-cardbg border border-gray-800 rounded-xl p-4 mb-6 flex flex-wrap gap-4 justify-between items-center text-xs">
+                    <div class="flex items-center space-x-2">
+                        <span class="text-gray-400">Ukuran Teks:</span>
+                        <button onclick="changeFontSize(-1)" class="bg-gray-800 hover:bg-crimson px-2.5 py-1 rounded font-bold text-white">-</button>
+                        <span id="font-size-display" class="font-bold text-white">18px</span>
+                        <button onclick="changeFontSize(1)" class="bg-gray-800 hover:bg-crimson px-2.5 py-1 rounded font-bold text-white">+</button>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-gray-400">Latar:</span>
+                        <button onclick="changeBg('dark')" class="w-5 h-5 rounded-full bg-black border border-gray-600"></button>
+                        <button onclick="changeBg('sepia')" class="w-5 h-5 rounded-full bg-[#1c1815] border border-amber-900"></button>
+                        <button onclick="changeBg('slate')" class="w-5 h-5 rounded-full bg-[#0f172a] border border-slate-700"></button>
+                    </div>
+                </div>
+
+                <!-- Display Tempat Membaca Cerita (Terpisah 1 per 1) -->
+                <div id="reader-box" class="bg-darkbg border border-gray-800/80 rounded-xl p-6 md:p-10 shadow-2xl transition-all duration-300">
+                    
+                    <!-- Indikator Halaman dalam Bab -->
+                    <div class="flex justify-between items-center mb-6 pb-3 border-b border-gray-800/60 text-xs text-gray-400">
+                        <span id="page-indicator" class="font-semibold text-crimson">Bagian 1 dari 5</span>
+                        <span>Narasi Panjang & Kompleks</span>
+                    </div>
+
+                    <!-- Teks Cerita Utama -->
+                    <div id="story-content" class="font-serif leading-relaxed text-gray-200 text-lg space-y-5 min-h-[350px]">
+                        <!-- Konten Paragraf dimuat di sini -->
+                    </div>
+
+                    <!-- Navigasi Halaman Cerita (Prev / Next Bagian) -->
+                    <div class="flex justify-between items-center mt-8 pt-6 border-t border-gray-800/60">
+                        <button id="btn-prev-page" onclick="changePage(-1)" class="bg-gray-800 hover:bg-crimson text-white px-4 py-2 rounded text-sm font-semibold transition-colors disabled:opacity-30 disabled:hover:bg-gray-800">
+                            <i class="fa-solid fa-chevron-left mr-1"></i> Bagian Sebelumnya
+                        </button>
+                        <button id="btn-next-page" onclick="changePage(1)" class="bg-crimson hover:bg-crimson-hover text-white px-4 py-2 rounded text-sm font-semibold transition-colors disabled:opacity-30 disabled:hover:bg-crimson">
+                            Bagian Selanjutnya <i class="fa-solid fa-chevron-right ml-1"></i>
+                        </button>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-darkbg border-t border-gray-800 py-6 text-center text-gray-500 text-xs">
+        <p class="font-serif">© 2026 Aeterna Nocturne. Platform Novel Digital Horor-Romantis Interaktif.</p>
+    </footer>
+
+    <!-- JavaScript Data & Logika Sistem -->
+    <script>
+        // Database 10 Novel dengan cerita yang panjang, mendalam, dan kompleks
+        const novelsData = [
+            {
+                id: 1,
+                title: "Bayang-Bayang Cinta yang Meredup",
+                synopsis: "Aris menerima surat berdarah dari Kirana yang menghilang setahun lalu. Namun rahasia kelam di balik kematian Kirana justru menyingkap konspirasi supranatural yang mengincar nyawa Aris sendiri.",
+                genre: "Romantis • Galau • Horor Psikologis",
+                chapters: [
+                    {
+                        chapterTitle: "Bab 1: Surat yang Ditulis dengan Darah Dingin",
+                        pages: [
+                            `<p class="first-letter:text-5xl first-letter:font-bold first-letter:text-crimson first-letter:float-left first-letter:mr-3">Hujan di perbatasan desa tak pernah benar-benar membasuh bau tanah yang basah; ia justru memanggil kembali ingatan-ingatan yang seharusnya telah membusuk bersama waktu. Di dalam kamar sempit berpenerangan lampu minyak yang meredup, Aris duduk terdiam di tepi ranjang kayu yang berderit. Malam telah mencapai puncaknya, sunyi melilit udara begitu ketat hingga detak jantungnya sendiri terdengar seperti dentang lonceng kematian yang menyayat hati.</p><p>Setahun telah berlalu sejak Kirana menghilang secara misterioso di tengah kegelapan hutan Pinus. Setahun sejak percekcokan hebat di tepi jurang meretakkan hubungan mereka. Aris masih ingat betul tatapan mata Kirana malam itu—tatapan yang memancarkan rasa sakit luar biasa, kehampaan yang tak terukur, dan keputusasaan yang meluap dari jiwanya yang hancur. Kirana pergi menerobos hujan tanpa sepatah kata pun kembali, meninggalkan Aris bersama penyesalan abadi yang membakar hatinya hingga menjadi abu.</p>`,
+                            `<p>"Jika aku tahu kau takkan pernah kembali, aku akan memilih mati di tanganmu malam itu, Kirana," bisik Aris pada kegelapan yang menutupi sudut ruangan. Suaranya serak, sarat akan duka melankolis yang menggerogoti jiwanya setiap kali ia menutup mata dan berusaha mencari tidur yang tak pernah datang.</p><p>Tiba-tiba, angin kencang menghempas jendela kamar hingga terbuka paksa. Lampu minyak padam seketika, melemparkan ruang kecil itu ke dalam kegelapan pekat. Bersamaan dengan berhembusnya udara dingin yang menggeletuk tulang, aroma amis yang sangat menyengat—bercampur dengan wangi bunga kamboja yang layu—merebak mendominasi udara.</p><p>Dengan tangan gemetar, Aris menyalakan kembali pemantik api. Namun saat cahaya kembali samar-samar menerangi ruangan, matanya tertuju pada meja tulisnya. Di atas tumpukan kertas kosongnya, tergeletak selembar amplop lusuh yang basah oleh cairan merah kehitaman yang masih hangat dan beraroma tembaga pekat.</p>`,
+                            `<p>Dengan jemari tremor dan hati yang berdegup kencang antara teror dan kerinduan yang membuncah, Aris membuka amplop tersebut. Di dalamnya terdapat lembaran surat dengan tulisan tangan yang terdistorsi namun sangat ia kenali sebagai garisan jemari Kirana:</p><div class="my-6 p-4 border-l-2 border-crimson bg-crimson-dark/10 italic text-gray-300"><p>"Aris... Mengapa kau biarkan aku sendirian di bawah tanah yang dingin ini? Kau berjanji akan mencintaiku hingga mati, namun saat jemari dingin itu mencengkeram leherku di kegelapan hutan, kau justru berbalik membelakangi jeritanku. Darah di dadaku tak sepahit penyesalanmu. Aku merindukanmu... dan aku akan datang menagih janji setiamu malam ini."</p></div><p>Rasa dingin langsung menjalar dari tengkuk hingga ke seluruh ujung jemari Aris. Air mata menetes di pipinya yang pucat. Surat itu tidak hanya membawa ingatan manis yang hancur, melainkan pengakuan bahwa Kirana tidak sekadar lari—ia telah dibunuh secara sadis malam itu!</p>`,
+                            `<p>Sebelum Aris sempat mencerna kenyataan mengerikan tersebut, suara ketukan perlahan berkumandang dari luar pintu rumahnya. <em>Tuk... Tuk... Tuk...</em> Ketukan itu begitu lambat, berirama persis seperti detak jantung seseorang yang sedang berada di ambang sakaratul maut.</p><p>Aris melangkah perlahan menuju pintu. Setiap jengkal langkahnya terasa amat berat, seolah-olah lantai kayu kamarnya menolak untuk mengantarnya menuju takdir kelam. Ketika ia memutar gagang pintu besi yang dingin, tidak ada siapapun di luar sana—kecuali jejak kaki berlumpur darah yang membentang dari ambang pintu, menuju ke arah cermin tua di sudut ruang tamunya.</p>`,
+                            `<p>Di atas permukaan cermin tua itu, bayangan Kirana berdiri membelakanginya dengan gaun putih yang compang-camping dan bersimbah darah. "Kau terlambat, Aris," bisik bayangan itu tanpa menggerakkan bibirnya. "Namun malam ini, kita akan bersatu kembali dalam kegelapan yang tak bersudut."</p><p>Keputusasaan Aris mencapai titik puncaknya. Ia tidak lagi berlari atau berteriak ketakutan. Ia justru berjalan mendekati bayangan gaib kekasihnya, siap menyerahkan nyawanya demi membayar rasa bersalah yang telah lama membakar jiwanya.</p>`
+                        ]
+                    },
+                    {
+                        chapterTitle: "Bab 2: Bisikan di Bawah Lantai Kamar",
+                        pages: [
+                            `<p>Suara ketukan di pintu depan mendadak berhenti, digantikan oleh kesunyian yang jauh lebih mengerikan. Udara di dalam ruangan terasa kian berat dan memadat, seolah-olah seluruh oksigen telah dihisap habis oleh kehadiran sosok gaib yang menuntut balas. Aris berdiri terpaku di depan cermin tua, memegang erat surat berdarah yang kini mulai mengering dan terasa lengket di jarinya.</p><p>Bayangan Kirana di dalam cermin mendadak perlahan memutar tubuhnya. Wajahnya yang dulu jelita kini tampak pucat pasi dengan mata kehitaman tanpa pupil yang mengucurkan cairan pekat. Namun di balik wujud horor itu, Aris masih melihat selarik penderitaan mendalam yang membuat hatinya hancur berkeping-keping.</p>`,
+                            `<p>"Mengapa kau tidak mencariku malam itu, Aris?" suara Kirana bergema di dalam kepala Aris, bukan di udara. "Pembunuh itu menyeretku ke bawah fondasi rumah ini saat aku masih bernapas. Dia menguburku hidup-hidup di bawah tempat tidurmu sendiri!"</p><p>Pernyataan itu menghantam dada Aris bak hantaman palu besi. Selama setahun penuh, ia tidur di atas tempat tidur yang sama, menangisi kehilangan Kirana, tanpa pernah menyadari bahwa jasad wanita yang paling ia cintai berada tepat beberapa inci di bawah tubuhnya, membusuk dalam kesendirian yang kelam.</p>`,
+                            `<p>Dari bawah papan lantai kayu di kamarnya, terdengar suara gesekan dan garukan kuku yang sangat keras. Suara kayu berderit berulang kali saat papan-papan lantai itu mulai terangkat satu per satu. Bau pembusukan yang tak tertahankan meluap dari dalam celah tanah di bawah lantai.</p><p>"Pembunuh itu... adalah orang yang paling kau percayai, Aris," bisik suara itu lagi. Papan lantai hancur berkeping-keping, menyingkapkan lubang hitam pekat di tanah fondasi rumah.</p>`,
+                            `<p>Dari dalam lubang itu, sesosok wujud dengan sisa-sisa gaun Kirana merangkak naik secara perlahan. Jemarinya yang tinggal tulang berlapis kulit hitam merayap mendekati kaki Aris. Namun bukannya menyerang Aris, jemari kaku itu menunjuk ke arah jendela luar—tempat berdiri seorang pria berjanggut tebal yang memegang lentera minyak dan bilah pisau berdarah.</p><p>Itu adalah paman Aris sendiri, orang yang selama ini memberinya ketenangan dan menyuruhnya melupakan Kirana!</p>`,
+                            `<p>"Dia menginginkan tanah warisan keluargamu, Aris... Dan Kirana mengetahui rencananya," suara tangisan gaib melayang di udara. Pria di luar jendela tertawa kencang, mendobrak pintu rumah dengan bilah pisau terangkat. Di antara teror gaib yang mengepung rumah dan pengkhianatan berdarah dari keluarganya sendiri, Aris menyadari bahwa dunia nyata terkadang jauh lebih mengerikan daripada bisikan arwah yang berduka.</p>`
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 2,
+                title: "Gaun Pengantin Berwarna Kelam",
+                synopsis: "Maya terbangun di malam pernikahan tanpa calon suaminya, Rehan. Gaun putih indah yang ia kenakan secara perlahan berubah menjadi hitam pekat dan memancarkan bau busuk dari alam gaib.",
+                genre: "Romantis • Horor Gaib • Tragedi",
+                chapters: [
+                    {
+                        chapterTitle: "Bab 1: Malam Tanpa Mempelai Pria",
+                        pages: [
+                            `<p>Lilin-lilin di dalam kamar pengantin berkedip redup, menciptakan bayangan-bayangan panjang yang menari di dinding kayu. Maya duduk terdiam di depan cermin rias besar, masih mengenakan gaun pengantin serba putih berenda mewah yang dirancang khusus untuk hari bahagianya. Namun tidak ada senyum di wajahnya; air mata telah mengering meninggalkan jejak kepedihan di pipinya yang pucat.</p><p>Upacara pernikahan yang seharusnya digelar sore tadi terpaksa dibatalkan secara mendadak. Rehan, pria yang sangat ia cintai dan calon suaminya, mendadak hilang tanpa jejak beberapa jam sebelum akad dimulai. Keluarga dan kerabat telah pulang dengan rasa kecewa dan bisik-bisik penuh curiga, meninggalkan Maya sendirian di dalam rumah tua milik keluarga Rehan di tepi hutan.</p>`,
+                            `<p>Rasa galau dan keputusasaan menusuk dada Maya begitu dalam. Ia teringat akan pertengkaran sengit mereka semalam. Rehan tampak sangat tertekan dan ketakutan akan sebuah kutukan keluarga yang enggan ia jelaskan secara rinci. Rehan sempat memegang tangan Maya erat-erat dan berbisik dengan mata berkaca-kaca: <em>"Jika aku tidak hadir di pelaminan esok hari, jangan pernah mendoakan keselamatanku... doakan agar jiwaku tidak mengganggumu."</em></p><p>Kini, saat jarum jam dinding tua berdenting 12 kali menandakan tengah malam, Maya menyadari ada hal yang salah dengan gaun pengantinnya. Bagian bawah kain gaun yang menjuntai di lantai perlahan berubah warna. Warna putih bersih itu terserap oleh noda hitam pekat yang merambat naik seperti tinta yang menyebar di air basah.</p>`,
+                            `<p>Bersamaan dengan perubahan warna kain itu, bau amis darah busuk dan bau tanah pekuburan merebak mendominasi kamar. Maya berdiri ketakutan, berusaha melepaskan kancing gaun itu dari tubuhnya. Namun anehnya, kain gaun itu seolah-olah telah menyatu dan melekat erat dengan kulit tubuhnya sendiri!</p><p>Tiba-tiba, kaca cermin rias di depannya mengembun tebal. Sebuah tangan gaib yang tak terlihat terukir dari balik embun kaca, menuliskan sebuah pesan dengan cairan merah yang menetes turun: <em>"Aku telah memenuhi janjiku, Maya... Aku mengenakan gaun ini bersamamu di alam mati."</em></p>`,
+                            `<p>Maya menjerit ketakutan saat merasakan dua lengan dingin tak berwujud memeluk pinggangnya rapat-rapat dari belakang. Di dalam cermin, ia melihat wujud Rehan berdiri menempel di punggungnya—namun tubuh Rehan tampak hancur, bersimbah lumpur, dan lehernya terkulai lemas dengan bekas jeratan tali yang menghitam.</p><p>Rehan tidak pernah melarikan diri dari pernikahan itu. Kutukan tua keluarganya telah menagih nyawa Rehan tepat di pagi hari pernikahan mereka, dan kini arwah sang calon suami kembali untuk membawa pengantinnya menuju pelaminan di dunia bawah.</p>`
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 3,
+                title: "Simfoni Jiwa yang Hancur",
+                synopsis: "Seorang pianis muda yang tuli setelah kecelakaan tragis mulai mendengar alunan musik misterius jam 3 pagi dari piano tua milik almarhumah kekasihnya.",
+                genre: "Melankolis • Misteri • Horor",
+                chapters: [
+                    {
+                        chapterTitle: "Bab 1: Nada yang Tertinggal di Tuts Hitam",
+                        pages: [
+                            `<p>Setiap jam 3 pagi, kesunyian di dalam aula musik tua itu dipecahkan oleh suara denting piano yang lembut namun sangat menyayat hati. Danang, seorang pianis muda yang secara medis divonis mengalami ketulian total akibat kecelakaan maut setahun lalu, mendadak terbangun dari tidurnya. Meski telinganya tak lagi dapat mendengar suara dunia luar, getaran frekuensi dari alunan piano itu bergema langsung di dalam tengkorak kepalanya.</p><p>Alunan lagu itu adalah simfoni romantis yang sangat khas—sebuah komposisi gubahan Elena, kekasih sekaligus violinis ternama yang tewas seketika dalam kecelakaan mobil yang sama dengannya. Danang terhenyak di atas kursi rodanya, memandangi piano grand tua berwarna hitam yang berjarak beberapa meter darinya di tengah ruangan pekat.</p>`,
+                            `<p>Dengan sisa kekuatannya, Danang memutar roda kursinya mendekati piano tersebut. Tuts-tuts piano bergerak dan menekan dengan sendirinya, seolah-olah dipetik oleh jemari halus tak berwujud yang lihai. Air mata meluncur deras di pipi Danang. Keputusasaan atas hilangnya pendengaran dan karier musiknya, bercampur duka kehilangan Elena, membuat rasa takutnya hilang sepenuhnya.</p><p>"Elena... apakah itu kau?" bisik Danang dengan suara gemetar, menempelkan kedua telapak tangannya ke atas permukaan kayu piano untuk merasakan getaran nada yang kian kencang.</p>`,
+                            `<p>Getaran itu mendadak berubah dari irama romantis yang hangat menjadi nada-nada disonan yang sumbang dan kacau. Tuts-tuts piano menekan kasar dengan jeda cepat! Dari dalam mekanisme senar di bawah penutup piano, cairan merah segar mulai memercik keluar, membasahi tuts-tuts putih menjadi warna merah menyala.</p><p>Di dalam pantulan kayu piano yang terpolitur mengkilap, Danang melihat wujud Elena duduk di sampingnya. Wajah Elena hancur dengan pecahan kaca mobil masih menancap di dadanya, namun jemarinya yang berdarah terus menari ganas di atas tuts. Elena menoleh ke arah Danang, tersenyum manis dengan bibirnya yang robek: <em>"Musik kita belum selesai, Danang... Berikan aku pendengaranmu agar kita bisa memainkannya selamanya di neraka."</em></p>`
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 4,
+                title: "Cinta di Ambang Jurang Kematian",
+                synopsis: "Janji suci dua sejoli di bangsal rumah sakit jiwa yang terbakar puluhan tahun lalu.",
+                genre: "Horor Psikologis • Dark Romance",
+                chapters: [{ chapterTitle: "Bab 1: Sisa Abu yang Bernapas", pages: [`<p>Di antara puing-puing bangunan tua rumah sakit jiwa yang terbakar habis tahun 1998, Rian melangkah menembus kabut malam. Ia datang untuk mencari jejak janji masa kecilnya bersama Sarah. Namun di balik dinding berbatu yang gosong, jeritan para pasien masa lalu masih menggema di balik angin malam, memanggil nama Rian untuk bergabung dalam penyesalan abadi.</p>`] }]
+            },
+            {
+                id: 5,
+                title: "Lukisan Air Mata & Darah",
+                synopsis: "Pelukis obsesif yang berusaha menghidupkan kembali wujud kekasihnya menggunakan cairan darahnya sendiri di atas kanvas raksasa.",
+                genre: "Tragedi • Horor Aksial",
+                chapters: [{ chapterTitle: "Bab 1: Goresan Kuas Terakhir", pages: [`<p>Setiap goresan warna merah di atas kanvas raksasa itu memanggil suara bisikan lembut dari dalam kegelapan studio lukisnya. Sang pelukis meyakini bahwa dengan memberikan setiap tetes darah dari tubuhnya, sosok kekasih yang melayang di alam gaib akan mendapatkan kembali wujud dagingnya yang utuh.</p>`] }]
+            },
+            {
+                id: 6,
+                title: "Jeritan dari Danau Sunyi",
+                synopsis: "Pencarian jasad kekasih yang tenggelam secara misterius berujung pada teror entitas kuno dari dasar danau.",
+                genre: "Misteri • Horor Gaib",
+                chapters: [{ chapterTitle: "Bab 1: Air yang Tak Pernah Tenang", pages: [`<p>Permukaan danau hitam di tengah hutan itu selalu memantulkan bayangan wajah wanita yang sangat ia rindukan. Namun saat tangan sang pria terjulur menyentuh permukaan air, jemari pucat dingin berukuran sangat panjang melilit pergelangan tangannya, menariknya tanpa ampun ke dalam kegelapan dasar air yang tak tersentuh cahaya.</p>`] }]
+            },
+            {
+                id: 7,
+                title: "Surat Cinta untuk Sang Ajal",
+                synopsis: "Surat-surat cinta yang dikirimkan ke alamat rumah kosong penunggu gaib demi memanggil arwah pasangan.",
+                genre: "Romantis • Melankolis",
+                chapters: [{ chapterTitle: "Bab 1: Alamat yang Tak Terdaftar", pages: [`<p>Surat ke-100 yang ia kirimkan ke rumah tua di ujung jalan akhirnya dibalas sore tadi. Balasan itu tidak diantar oleh petugas pos, melainkan diletakkan secara misterius di atas dadanya saat ia terbangun dari mimpi buruk di tengah malam pekat.</p>`] }]
+            },
+            {
+                id: 8,
+                title: "Lentera Merah di Ujung Desa",
+                synopsis: "Tragedi cinta terlarang antara dua sejoli yang melahirkan kutukan entitas gaib tujuh keturunan.",
+                genre: "Horor Folklor • Tragedi",
+                chapters: [{ chapterTitle: "Bab 1: Angin Malam yang Mendingin", pages: [`<p>Lentera merah tua itu selalu menyala secara gaib setiap kali ada jiwa di desa yang meratapi perpisahan cinta. Cahayanya yang kemerahan memanggil sosok wanita berselendang kusam dari balik pepohonan bambu.</p>`] }]
+            },
+            {
+                id: 9,
+                title: "Detak Jantung yang Terhenti",
+                synopsis: "Pria yang mendengarkan detak organ jantung kekasihnya di dalam tubuh penerima donor yang berujung pada obsesi berdarah.",
+                genre: "Drama • Horor Psikologis",
+                chapters: [{ chapterTitle: "Bab 1: Bisikan Dalam Dada", pages: [`<p>Jantung di dalam dada pria asing itu berdetak jauh lebih cepat setiap kali mereka berdekatan. Detakan itu terdengar menyerupai suara ketukan rahasia yang biasa digunakan oleh almarhumah kekasihnya sebelum tewas tragis.</p>`] }]
+            },
+            {
+                id: 10,
+                title: "Janji Setia Hingga Membusuk",
+                synopsis: "Prosesi pernikahan rahasia yang diselenggarakan di dalam ruang bawah tanah kuburan keluarga.",
+                genre: "Dark Romance • Horor Kelam",
+                chapters: [{ chapterTitle: "Bab 1: Cincin di Jari Pucat", pages: [`<p>Di bawah sinar bulan purnama yang menembus celah atap makam tua, cincin perak dimasukkan ke jari manis yang telah dingin dan kaku. Janji setia diucapkan di depan saksi-saksi tak berwujud yang berdiri mengelilingi altar batu.</p>`] }]
+            }
+        ];
+
+        // App State
+        let activeNovel = null;
+        let activeChapterIndex = 0;
+        let activePageIndex = 0;
+        let currentFontSize = 18;
+
+        // Render Katalog Novel
+        function renderCatalog() {
+            const grid = document.getElementById('novel-grid');
+            grid.innerHTML = '';
+
+            novelsData.forEach((novel) => {
+                const card = document.createElement('div');
+                card.className = "bg-cardbg hover:bg-gray-900 border border-gray-800 hover:border-crimson/50 rounded-xl p-6 transition-all duration-300 flex flex-col justify-between group cursor-pointer shadow-lg hover:shadow-2xl";
+                card.onclick = () => openNovel(novel.id);
+
+                card.innerHTML = `
+                    <div>
+                        <span class="text-xs font-bold text-crimson uppercase tracking-wider">${novel.genre}</span>
+                        <h3 class="text-xl font-bold text-white group-hover:text-crimson transition-colors mt-2 font-serif">${novel.title}</h3>
+                        <p class="text-sm text-gray-400 mt-3 leading-relaxed">${novel.synopsis}</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-gray-800/80 flex justify-between items-center text-xs text-gray-500 group-hover:text-gray-300">
+                        <span>${novel.chapters.length} Bab Tersedia</span>
+                        <span class="text-crimson font-semibold">Mulai Membaca <i class="fa-solid fa-arrow-right ml-1"></i></span>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Buka Novel
+        function openNovel(novelId) {
+            activeNovel = novelsData.find(n => n.id === novelId);
+            activeChapterIndex = 0;
+            activePageIndex = 0;
+
+            document.getElementById('reader-novel-title').innerText = activeNovel.title;
+            document.getElementById('reader-genre').innerText = activeNovel.genre;
+
+            // Populate Dropdown Bab
+            const select = document.getElementById('chapter-select');
+            select.innerHTML = '';
+            activeNovel.chapters.forEach((chap, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.innerText = chap.chapterTitle;
+                select.appendChild(opt);
+            });
+
+            document.getElementById('catalog-view').classList.add('hidden');
+            document.getElementById('reader-view').classList.remove('hidden');
+
+            renderCurrentPage();
+        }
+
+        // Kembalikan ke Katalog
+        function showCatalog() {
+            document.getElementById('reader-view').classList.add('hidden');
+            document.getElementById('catalog-view').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Render Halaman Cerita yang Sedang Aktif
+        function renderCurrentPage() {
+            const currentChap = activeNovel.chapters[activeChapterIndex];
+            document.getElementById('reader-chapter-title').innerText = currentChap.chapterTitle;
+            document.getElementById('chapter-select').value = activeChapterIndex;
+
+            const totalPages = currentChap.pages.length;
+            document.getElementById('page-indicator').innerText = `Bagian ${activePageIndex + 1} dari ${totalPages}`;
+
+            // Isi konten teks
+            document.getElementById('story-content').innerHTML = currentChap.pages[activePageIndex];
+
+            // Update status tombol navigasi bagian
+            document.getElementById('btn-prev-page').disabled = (activePageIndex === 0 && activeChapterIndex === 0);
+            document.getElementById('btn-next-page').disabled = (activePageIndex === totalPages - 1 && activeChapterIndex === activeNovel.chapters.length - 1);
+
+            document.getElementById('reader-box').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Event handler Ganti Bab via Dropdown
+        function onChapterSelect(index) {
+            activeChapterIndex = parseInt(index);
+            activePageIndex = 0;
+            renderCurrentPage();
+        }
+
+        // Perpindahan Bagian/Halaman Cerita
+        function changePage(direction) {
+            const currentChap = activeNovel.chapters[activeChapterIndex];
+            const totalPages = currentChap.pages.length;
+
+            if (direction === 1) { // Next
+                if (activePageIndex < totalPages - 1) {
+                    activePageIndex++;
+                } else if (activeChapterIndex < activeNovel.chapters.length - 1) {
+                    activeChapterIndex++;
+                    activePageIndex = 0;
+                }
+            } else if (direction === -1) { // Prev
+                if (activePageIndex > 0) {
+                    activePageIndex--;
+                } else if (activeChapterIndex > 0) {
+                    activeChapterIndex--;
+                    activePageIndex = activeNovel.chapters[activeChapterIndex].pages.length - 1;
+                }
+            }
+            renderCurrentPage();
+        }
+
+        // Kontrol Pengalaman Membaca
+        function changeFontSize(delta) {
+            currentFontSize = Math.min(Math.max(14, currentFontSize + delta), 26);
+            document.getElementById('font-size-display').innerText = `${currentFontSize}px`;
+            document.getElementById('story-content').style.fontSize = `${currentFontSize}px`;
+        }
+
+        function changeBg(theme) {
+            const box = document.getElementById('reader-box');
+            box.classList.remove('bg-darkbg', 'bg-[#1c1815]', 'bg-[#0f172a]');
+            if (theme === 'dark') box.classList.add('bg-darkbg');
+            if (theme === 'sepia') box.classList.add('bg-[#1c1815]');
+            if (theme === 'slate') box.classList.add('bg-[#0f172a]');
+        }
+
+        // Inisialisasi
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCatalog();
+        });
+    </script>
+</body>
+</html>
